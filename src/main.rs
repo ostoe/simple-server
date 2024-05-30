@@ -123,7 +123,9 @@ async fn handle_f(mut stream: TcpStream, opt_sleep: u64, network_level: u8, resp
             return Ok(());
         }
         // println!("{}", std::str::from_utf8( &buffer[..size]).unwrap() );
-
+        if opt_sleep != 0 {
+            tokio::time::sleep(tokio::time::Duration::from_millis(opt_sleep)).await;
+        }
         if network_level == 4 {
             stream.write(response.as_bytes()).await?;
         } else { //  if network_level == 7 
@@ -135,9 +137,7 @@ async fn handle_f(mut stream: TcpStream, opt_sleep: u64, network_level: u8, resp
         }
         stream.flush().await?;
 
-        if opt_sleep != 0 {
-            tokio::time::sleep(tokio::time::Duration::from_millis(opt_sleep)).await;
-        }
+
     }
     return Ok(());
 }

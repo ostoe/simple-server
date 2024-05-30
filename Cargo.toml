@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1.36.0", features = ["full"] }
 structopt = "0.3.26"
+[profile.release]
+strip = true
