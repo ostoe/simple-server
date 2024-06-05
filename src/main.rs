@@ -9,22 +9,22 @@ use tokio::net::{TcpListener, TcpStream};
 // use tokio::io::{self, AsyncWriteExt};
 
 #[derive(Debug, StructOpt, Clone)]
-#[structopt(name = "tcp-listen", about = "An example of StructOpt usage.")]
+#[structopt(name = "tcp-listen", about = "Simple TCP/HTTP Server usage.")]
 struct Opt {
-    /// Activate debug mode
+    /// listen port, 
     // short and long flags (-d, --debug) will be deduced from the field's name
     #[structopt(short = "p", long = "port", default_value = "8080")]
     port: u64,
 
-    // request sleep (ms)
+    /// sleep (ms) per request
     #[structopt(short = "s", long, default_value = "0")]
     sleep: u64,
 
-    // request level tcp or http (ms)
-    #[structopt(short = "l", long, default_value = "4")]
+    /// request level tcp or http (ms)
+    #[structopt(short = "l", long, default_value = "7")]
     level: u8,
 
-    // request level tcp or http (ms)
+    /// response content path, default "-->OK!"
     #[structopt(short = "r", long, default_value = "")]
     response_path: String,
 }
@@ -73,8 +73,8 @@ async fn main() {
 	println!("四层or七层？: {}", opt.level);
 	// println!("请求响应内容路径:%s\n", path);
 	println!("监听端口：{}", opt.port);
-    println!("响应内容：{}", return_value);
-    println!("最后一个字符为十进制，如果使用jmeter tcp压测，请设置为结束位: {}", return_value.as_bytes().last().unwrap());
+    println!("响应内容：\n{}", return_value);
+    println!("结束位: {}, ps: 最后一个字符为十进制，如果使用jmeter tcp压测，请设置为", return_value.as_bytes().last().unwrap());
 
     let return_value_arc = Arc::new(return_value);
     let notfound_arc = Arc::new(notfound);
@@ -82,7 +82,7 @@ async fn main() {
     let listener = TcpListener::bind(format!("{}:{}", "0.0.0.0", opt.port))
         .await
         .unwrap();
-    println!("[{}]lisenting...", opt.port);
+    println!("[{}] lisenting...", opt.port);
     loop {
         // The second item contains the ip and port of the new connection.
         let (stream, _) = listener.accept().await.unwrap();
